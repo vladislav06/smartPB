@@ -16,13 +16,8 @@ void main() {
   device.capacity = 2000;
   device.name = 'phone';
   device.deviceType = UserDeviceType.phone;
-  Future.delayed(Duration(milliseconds: 200)).then((value) {
-    UserDeviceManager().getUserDevice().then((value) {
-      value.add(device);
-      value.add(device);
-      value.add(device);
-      UserDeviceManager().saveUserDevices();
-    });
+  Future.delayed(const Duration(milliseconds: 200)).then((value) {
+    UserDeviceManager().getUserDevice();
   });
 
   runApp(const MyApp());

@@ -1,5 +1,7 @@
 import 'package:flutter/material.dart';
 import 'package:smart_pb/ui/charge_page.dart';
+import 'package:smart_pb/ui/device_page.dart';
+import 'package:smart_pb/ui/about_page.dart';
 
 class HomeScreen extends StatefulWidget {
   const HomeScreen({Key? key}) : super(key: key);
@@ -20,26 +22,22 @@ class _HomeScreenState extends State<HomeScreen> {
           bottom: const TabBar(
             tabs: <Widget>[
               Tab(
-                icon: Icon(Icons.cloud_outlined),
+                icon: Icon(Icons.developer_board_outlined),
               ),
               Tab(
-                icon: Icon(Icons.beach_access_sharp),
+                icon: Icon(Icons.devices),
               ),
               Tab(
-                icon: Icon(Icons.brightness_5_sharp),
+                icon: Icon(Icons.info_outline),
               ),
             ],
           ),
         ),
         body: TabBarView(
           children: <Widget>[
-           ChargePage(),
-            Center(
-              child: Text("It's rainy here"),
-            ),
-            Center(
-              child: Text("It's sunny here"),
-            ),
+            ChargerPage(),
+            DevicePage(),
+            AboutPage(),
           ],
         ),
       ),

@@ -3,6 +3,7 @@ import 'dart:io';
 
 import 'package:path_provider/path_provider.dart';
 import 'package:smart_pb/user_device/user_device.dart';
+import 'package:smart_pb/user_device/user_device_type.dart';
 
 /// User device manager, manages user devices, loads and saves them
 class UserDeviceManager {
@@ -56,9 +57,10 @@ class UserDeviceManager {
         UserDevice device = UserDevice();
         device.capacity = e['capacity'];
         device.name = e['name'];
+        device.deviceType = UserDeviceType.fromJson(e['deviceType']);
         return device;
       }).toList();
-    } on  FormatException catch(e){
+    } on FormatException catch (e) {
       print(e);
       return [];
     }

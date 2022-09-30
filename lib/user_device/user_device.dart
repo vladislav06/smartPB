@@ -2,6 +2,23 @@ import 'package:smart_pb/user_device/user_device_type.dart';
 
 /// User defined device
 class UserDevice {
+  UserDevice();
+
+  UserDevice.from(this.name, this.capacity, this.deviceType);
+
+  UserDevice.fromJson(Map<String, dynamic> json)
+      : name = json['name'],
+        capacity = json['capacity'],
+        deviceType = json['deviceType'];
+
+  Map<String, dynamic> toJson() {
+    return {
+      'name': name,
+      'capacity': capacity,
+      'deviceType': deviceType,
+    };
+  }
+
   /// Name of device
   String name = '';
 

@@ -18,7 +18,7 @@ class AppTheme extends StatelessWidget {
 
 class AppThemeData {
   AppThemeData(BuildContext context);
-  
+
   BorderRadius radius = const BorderRadius.all(Radius.circular(16));
   EdgeInsets padding = const EdgeInsets.all(16);
 
@@ -26,6 +26,10 @@ class AppThemeData {
     primarySwatch: Colors.blue,
   );
   TabBarTheme tabBarTheme = const TabBarTheme();
+
+  TextStyle largeText = const TextStyle(
+    fontSize: 20,
+  );
 
   //apply as default
   ThemeData get materialTheme {
