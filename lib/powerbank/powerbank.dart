@@ -1,5 +1,18 @@
+import 'package:smart_pb/powerbank/powerbank_bl_manager.dart';
+
 /// Power bank object
 class Powerbank {
+  PowerbankBLManager manager = PowerbankBLManager();
+
+  Powerbank() {
+    manager.initBluetooth();
+    manager.scan().then((value) {
+      manager.subscribe((data) {
+        print(data);
+      });
+    });
+  }
+
   /// Charge of powerbank, from 0 to 1
   double _charge = 0;
 

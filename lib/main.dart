@@ -6,18 +6,21 @@ import 'package:smart_pb/user_device/user_device.dart';
 import 'package:smart_pb/user_device/user_device_manager.dart';
 import 'package:smart_pb/user_device/user_device_type.dart';
 
-final Powerbank powerbank = Powerbank();
+late final Powerbank powerbank;
 
 void main() {
-  powerbank.totalCapacity = 20000;
-  powerbank.charge = 50;
+
 
   UserDevice device = UserDevice();
   device.capacity = 2000;
   device.name = 'phone';
   device.deviceType = UserDeviceType.phone;
+  //load user devices and init bluetooth after binding initialization
   Future.delayed(const Duration(milliseconds: 200)).then((value) {
     UserDeviceManager().getUserDevice();
+    powerbank= Powerbank();
+    powerbank.totalCapacity = 20000;
+    powerbank.charge = 50;
   });
 
   runApp(const MyApp());
