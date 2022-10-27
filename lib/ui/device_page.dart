@@ -2,10 +2,12 @@ import 'dart:async';
 
 import 'package:flutter/material.dart';
 import 'package:smart_pb/app_theme.dart';
+import 'package:smart_pb/powerbank/powerbank.dart';
 import 'package:smart_pb/ui/device_settings_screen.dart';
 import 'package:smart_pb/user_device/user_device.dart';
 import 'package:smart_pb/user_device/user_device_manager.dart';
 import 'package:smart_pb/user_device/user_device_widget.dart';
+import 'package:provider/provider.dart';
 
 class DevicePage extends StatefulWidget {
   const DevicePage({Key? key}) : super(key: key);
@@ -34,28 +36,30 @@ class _DevicePageState extends State<DevicePage> {
         child: Column(
           crossAxisAlignment: CrossAxisAlignment.center,
           children: [
-            FutureBuilder(
-              future: UserDeviceManager().getUserDevice(),
-              builder: (context, snapshot) {
-                if (!snapshot.hasData) return Spacer();
-                var devices = snapshot.data as List<UserDevice>;
-                return Column(
-                  children: devices
-                      .map((dev) => Padding(
-                            padding: context.appTheme.padding,
-                            child: UserDeviceWidget(
-                              device: dev,
-                              onTap: () {
-                                openEditor(dev).then((value) {
-                                  setState(() {});
-                                  UserDeviceManager().saveUserDevices();
-                                });
-                              },
-                            ),
-                          ))
-                      .toList(),
-                );
-              },
+            Consumer<Powerbank>(
+              builder: (context, powerbank, child) => FutureBuilder(
+                future: UserDeviceManager().getUserDevice(),
+                builder: (context, snapshot) {
+                  if (!snapshot.hasData) return Spacer();
+                  var devices = snapshot.data as List<UserDevice>;
+                  return Column(
+                    children: devices
+                        .map((dev) => Padding(
+                              padding: context.appTheme.padding,
+                              child: UserDeviceWidget(
+                                device: dev,
+                                onTap: () {
+                                  openEditor(dev).then((value) {
+                                    setState(() {});
+                                    UserDeviceManager().saveUserDevices();
+                                  });
+                                },
+                              ),
+                            ))
+                        .toList(),
+                  );
+                },
+              ),
             ),
           ],
         ),

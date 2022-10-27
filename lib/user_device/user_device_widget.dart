@@ -42,7 +42,7 @@ class UserDeviceWidget extends StatelessWidget {
               Padding(
                 padding: const EdgeInsets.all(8.0),
                 child: Text(
-                  '${(powerbank.capacity / device.capacity).toStringAsFixed(1)} ',
+                  '${(pbManager.powerbank.capacity / device.capacity).toStringAsFixed(1)} ',
                   style: const TextStyle(
                     color: Colors.white,
                     fontSize: 20,

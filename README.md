@@ -1,2 +1,2 @@
 # smartPB
-smart (actualy dumb and wery annoying) power bank 
+smart (actually dumb and very annoying) power bank 

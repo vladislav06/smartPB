@@ -1,26 +1,21 @@
 import 'package:flutter/material.dart';
 import 'package:smart_pb/app_theme.dart';
 import 'package:smart_pb/powerbank/powerbank.dart';
+import 'package:smart_pb/powerbank/powerbank_bl_manager.dart';
 import 'package:smart_pb/ui/home_screen.dart';
 import 'package:smart_pb/user_device/user_device.dart';
 import 'package:smart_pb/user_device/user_device_manager.dart';
 import 'package:smart_pb/user_device/user_device_type.dart';
 
-late final Powerbank powerbank;
-
+late final PowerbankBLManager pbManager;
 void main() {
+  pbManager = PowerbankBLManager();
 
-
-  UserDevice device = UserDevice();
-  device.capacity = 2000;
-  device.name = 'phone';
-  device.deviceType = UserDeviceType.phone;
   //load user devices and init bluetooth after binding initialization
-  Future.delayed(const Duration(milliseconds: 200)).then((value) {
+  Future.delayed(const Duration(milliseconds: 200)).then((value) async {
     UserDeviceManager().getUserDevice();
-    powerbank= Powerbank();
-    powerbank.totalCapacity = 20000;
-    powerbank.charge = 50;
+    pbManager.initBluetooth();
+    pbManager.connect();
   });
 
   runApp(const MyApp());
