@@ -1,7 +1,8 @@
 import 'dart:async';
 
-import 'package:smart_pb/powerbank/powerbank.dart';
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
+import 'package:permission_handler/permission_handler.dart';
+import 'package:smart_pb/powerbank/powerbank.dart';
 
 class PowerbankBLManager {
   late Powerbank powerbank;
@@ -15,7 +16,12 @@ class PowerbankBLManager {
     powerbank.charge = 50;
   }
 
-  void initBluetooth() {
+  Future<void> initBluetooth() async {
+    //req permission
+    var status = await Permission.locationWhenInUse.status;
+    if (status.isDenied) {
+      await Permission.locationWhenInUse.request();
+    }
     _ble = FlutterReactiveBle();
   }
 
@@ -50,7 +56,9 @@ class PowerbankBLManager {
   }
 
   Future<bool> _find() async {
+
     Completer<bool> completer = Completer();
+
     //scan for devices, until appropriate one is found
     late StreamSubscription<DiscoveredDevice> devStream;
     devStream = _ble.scanForDevices(
