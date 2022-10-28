@@ -4,6 +4,7 @@ import 'dart:io';
 import 'package:path_provider/path_provider.dart';
 import 'package:smart_pb/user_device/user_device.dart';
 import 'package:smart_pb/user_device/user_device_type.dart';
+import 'package:smart_pb/util/file_utils.dart';
 
 /// User device manager, manages user devices, loads and saves them
 class UserDeviceManager {
@@ -23,21 +24,10 @@ class UserDeviceManager {
   Future<File> get file async {
     if (_file != null) return _file!;
 
-    _file = await _initFile();
+    _file = await initFile(_fileName);
     return _file!;
   }
 
-  // Initialize file
-  Future<File> _initFile() async {
-    final directory = await getApplicationDocumentsDirectory();
-    final path = directory.path;
-    File file = File('$path/$_fileName');
-    //create file if don't exist
-    if (!(await file.exists())) {
-      await file.create();
-    }
-    return file;
-  }
 
   void saveUserDevices() async {
     final File fl = await file;

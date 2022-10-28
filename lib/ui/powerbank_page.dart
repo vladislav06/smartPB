@@ -50,10 +50,6 @@ class _PowerbankPageState extends State<PowerbankPage> {
             style: context.appTheme.largeText,
           ),
           Text(
-            'Connection: ${pbManager.powerbank.isConnected ? 'ok' : 'disconnected'}',
-            style: context.appTheme.largeText,
-          ),
-          Text(
             'Last update: ${DateTime.now().millisecondsSinceEpoch - pbManager.powerbank.lastUpdateTime < 5000 ? 'now' : '${((DateTime.now().millisecondsSinceEpoch - pbManager.powerbank.lastUpdateTime) / (1000 * 3600)).toStringAsFixed(1)} hr'}',
             style: context.appTheme.largeText,
           ),

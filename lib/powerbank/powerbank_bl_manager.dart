@@ -1,19 +1,56 @@
 import 'dart:async';
+import 'dart:convert';
+import 'dart:io';
 
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
+import 'package:smart_pb/powerbank/powerbank.dart';
+import 'package:smart_pb/util/file_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:smart_pb/powerbank/powerbank.dart';
 
+/// Singleton manager, that manages powerbank instance
 class PowerbankBLManager {
-  late Powerbank powerbank;
+  PowerbankBLManager.privateConstructor() {
+    _powerbank = Powerbank();
+  }
+
+  static final PowerbankBLManager _instance =
+      PowerbankBLManager.privateConstructor();
+
+  factory PowerbankBLManager() => _instance;
+
+  File? _file;
+  static const _fileName = 'saved_presets.json';
+
+  // Get the data file
+  Future<File> get file async {
+    if (_file != null) return _file!;
+
+    _file = await initFile(_fileName);
+    return _file!;
+  }
+
+  late Powerbank _powerbank;
+
+  Powerbank get powerbank => _powerbank;
+
   late FlutterReactiveBle _ble;
   DiscoveredDevice? _device;
   int lastUpdateTime = 0;
 
-  PowerbankBLManager() {
-    powerbank = Powerbank();
-    powerbank.totalCapacity = 20000;
-    powerbank.charge = 50;
+  /// Load [powerbank] from storage
+  Future<void> loadPowerbank() async {
+    final File fl = await file;
+    final content = await fl.readAsString();
+
+    try {
+      Map<String, dynamic> data = jsonDecode(content);
+      _powerbank.fromJson(data);
+    } catch (e) {
+      print(e);
+    }
+    _powerbank.totalCapacity = 20000;
+    _powerbank.charge = 50;
   }
 
   Future<void> initBluetooth() async {
@@ -23,6 +60,7 @@ class PowerbankBLManager {
       await Permission.locationWhenInUse.request();
     }
     _ble = FlutterReactiveBle();
+    _ble.logLevel=LogLevel.verbose;
   }
 
   Future<void> connect() async {
@@ -56,14 +94,13 @@ class PowerbankBLManager {
   }
 
   Future<bool> _find() async {
-
     Completer<bool> completer = Completer();
-
     //scan for devices, until appropriate one is found
     late StreamSubscription<DiscoveredDevice> devStream;
     devStream = _ble.scanForDevices(
       withServices: [],
       scanMode: ScanMode.lowLatency,
+      requireLocationServicesEnabled: true,
     ).listen((device) {
       print('Found "${device.name}",${device.id}');
       if (device.name == "VOLT_ESP32") {
