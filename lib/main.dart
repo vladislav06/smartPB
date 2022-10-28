@@ -14,6 +14,7 @@ void main() {
   //load user devices and init bluetooth after binding initialization
   Future.delayed(const Duration(milliseconds: 200)).then((value) async {
     UserDeviceManager().getUserDevice();
+  //  pbManager.loadPowerbank();
     pbManager.initBluetooth();
     pbManager.connect();
   });

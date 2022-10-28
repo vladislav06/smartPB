@@ -2,6 +2,8 @@ import 'package:flutter/material.dart';
 
 /// Power bank object
 class Powerbank extends ChangeNotifier {
+  Powerbank();
+
   /// Charge of powerbank, from 0 to 1
   double _charge = 0;
 
@@ -78,10 +80,6 @@ class Powerbank extends ChangeNotifier {
   /// Total capacity of powerbank, is measured in mAh
   int totalCapacity = 0;
 
-  /// Is connected to app?
-  /// Returns true if last packet from device was received less than 5 seconds ago
-  bool isConnected = false;
-
   /// Last received data time, uses UNIX time
   int _lastUpdateTime = 0;
 
@@ -93,4 +91,18 @@ class Powerbank extends ChangeNotifier {
 
   /// Get last received data time, uses UNIX time
   int get lastUpdateTime => _lastUpdateTime;
+
+  void fromJson(Map<String, dynamic> json) {
+    _charge = json['_charge'];
+    totalCapacity = json['totalCapacity'];
+    _lastUpdateTime = json['_lastUpdateTime'];
+  }
+
+  Map<String, dynamic> toJson() {
+    return {
+      '_charge': _charge,
+      'totalCapacity': totalCapacity,
+      '_lastUpdateTime': _lastUpdateTime,
+    };
+  }
 }
