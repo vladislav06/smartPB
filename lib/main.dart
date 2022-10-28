@@ -12,10 +12,9 @@ void main() {
   //load user devices and init bluetooth after binding initialization
   Future.delayed(const Duration(milliseconds: 200)).then((value) async {
     await UserDeviceManager().getUserDevice();
-    pbManager.loadPowerbank();
+    await pbManager.loadPowerbank();
     await pbManager.initBluetooth();
     await pbManager.connect();
-
   });
 
   runApp(const MyApp());

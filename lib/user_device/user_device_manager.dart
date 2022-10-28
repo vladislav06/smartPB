@@ -1,7 +1,5 @@
 import 'dart:convert';
 import 'dart:io';
-
-import 'package:path_provider/path_provider.dart';
 import 'package:smart_pb/user_device/user_device.dart';
 import 'package:smart_pb/user_device/user_device_type.dart';
 import 'package:smart_pb/util/file_utils.dart';

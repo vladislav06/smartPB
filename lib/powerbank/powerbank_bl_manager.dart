@@ -50,7 +50,10 @@ class PowerbankBLManager {
       print(e);
     }
     _powerbank.totalCapacity = 20000;
-    _powerbank.charge = 50;
+    _powerbank.addListener(() async {
+      await fl.writeAsString(jsonEncode(_powerbank));
+
+    });
   }
 
   Future<void> initBluetooth() async {
