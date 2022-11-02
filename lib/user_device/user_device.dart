@@ -6,10 +6,11 @@ class UserDevice {
 
   UserDevice.from(this.name, this.capacity, this.deviceType);
 
-  UserDevice.fromJson(Map<String, dynamic> json)
-      : name = json['name'],
-        capacity = json['capacity'],
-        deviceType = json['deviceType'];
+  fromJson(Map<String, dynamic> json) {
+    name = json['name'];
+    capacity = json['capacity'];
+    deviceType = UserDeviceType.fromJson(json['deviceType']);
+  }
 
   Map<String, dynamic> toJson() {
     return {

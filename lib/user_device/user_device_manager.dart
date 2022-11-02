@@ -1,7 +1,7 @@
 import 'dart:convert';
 import 'dart:io';
+
 import 'package:smart_pb/user_device/user_device.dart';
-import 'package:smart_pb/user_device/user_device_type.dart';
 import 'package:smart_pb/util/file_utils.dart';
 
 /// User device manager, manages user devices, loads and saves them
@@ -26,32 +26,33 @@ class UserDeviceManager {
     return _file!;
   }
 
-
   void saveUserDevices() async {
     final File fl = await file;
     await fl.writeAsString(jsonEncode(_userDevices));
+    print('saveDevice');
   }
 
   Future<List<UserDevice>> getUserDevice() async {
     if (_userDevices != null) return _userDevices!;
 
+    print('loadDevice');
     _userDevices = [];
     final File fl = await file;
     final content = await fl.readAsString();
 
-    try {
-      List data = jsonDecode(content);
+   // try {
+      List<dynamic> data = jsonDecode(content);
+
       _userDevices = data.map((e) {
         UserDevice device = UserDevice();
-        device.capacity = e['capacity'];
-        device.name = e['name'];
-        device.deviceType = UserDeviceType.fromJson(e['deviceType']);
+        device.fromJson(e);
         return device;
       }).toList();
-    } on FormatException catch (e) {
-      print(e);
-      return [];
-    }
+      print(jsonEncode(_userDevices));
+    // } on FormatException catch (e) {
+    //   print(e);
+    //   return [];
+    // }
     return _userDevices!;
   }
 }

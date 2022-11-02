@@ -3,10 +3,9 @@ import 'dart:convert';
 import 'dart:io';
 
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
-import 'package:smart_pb/powerbank/powerbank.dart';
-import 'package:smart_pb/util/file_utils.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:smart_pb/powerbank/powerbank.dart';
+import 'package:smart_pb/util/file_utils.dart';
 
 /// Singleton manager, that manages powerbank instance
 class PowerbankBLManager {
@@ -20,7 +19,7 @@ class PowerbankBLManager {
   factory PowerbankBLManager() => _instance;
 
   File? _file;
-  static const _fileName = 'saved_presets.json';
+  static const _fileName = 'powerbank.json';
 
   // Get the data file
   Future<File> get file async {
@@ -38,8 +37,15 @@ class PowerbankBLManager {
   DiscoveredDevice? _device;
   int lastUpdateTime = 0;
 
+  Future<void> savePowerbank() async {
+    final File fl = await file;
+    await fl.writeAsString(jsonEncode(_powerbank));
+    print('save powerbank');
+  }
+
   /// Load [powerbank] from storage
   Future<void> loadPowerbank() async {
+    print('loadPowerbank');
     final File fl = await file;
     final content = await fl.readAsString();
 
@@ -52,7 +58,6 @@ class PowerbankBLManager {
     _powerbank.totalCapacity = 20000;
     _powerbank.addListener(() async {
       await fl.writeAsString(jsonEncode(_powerbank));
-
     });
   }
 
@@ -63,7 +68,7 @@ class PowerbankBLManager {
       await Permission.locationWhenInUse.request();
     }
     _ble = FlutterReactiveBle();
-    _ble.logLevel=LogLevel.verbose;
+    _ble.logLevel = LogLevel.verbose;
   }
 
   Future<void> connect() async {
@@ -85,15 +90,15 @@ class PowerbankBLManager {
           print('data:[${data[0]},${data[1]},${data[2]},${data[3]}]');
           print("decoded value: ${(data[1] << 8) | data[0]}");
 
+
           powerbank.lastUpdateTime = DateTime.now().millisecondsSinceEpoch;
           powerbank.voltage = (data[1] << 8) | data[0];
+          savePowerbank();
         }, onError: (dynamic error) {});
       }
     }, onError: (dynamic error) {
       // Handle a possible error
     });
-
-    await _subscribe(_parser);
   }
 
   Future<bool> _find() async {
@@ -116,11 +121,5 @@ class PowerbankBLManager {
     });
 
     return completer.future;
-  }
-
-  Future<void> _subscribe(void Function(List<int> data) subscriber) async {}
-
-  void _parser(List<int> data) {
-    print(data);
   }
 }
