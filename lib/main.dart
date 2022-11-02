@@ -1,23 +1,32 @@
 import 'package:flutter/material.dart';
+import 'package:flutter_local_notifications/flutter_local_notifications.dart';
 import 'package:smart_pb/app_theme.dart';
 import 'package:smart_pb/powerbank/powerbank_bl_manager.dart';
 import 'package:smart_pb/ui/home_screen.dart';
 import 'package:smart_pb/user_device/user_device_manager.dart';
+import 'package:smart_pb/util/notification_service.dart';
 
 late final PowerbankBLManager pbManager;
 
 void main() {
   pbManager = PowerbankBLManager();
-
-  //load user devices and init bluetooth after binding initialization
-  Future.delayed(const Duration(milliseconds: 200)).then((value) async {
-    await UserDeviceManager().getUserDevice();
-    await pbManager.loadPowerbank();
-    await pbManager.initBluetooth();
-    await pbManager.connect();
-  });
+  // init bindings
+  WidgetsFlutterBinding.ensureInitialized();
+  init();
 
   runApp(const MyApp());
+}
+
+void init() async {
+  // init notification
+  await NotificationService().init();
+
+  //load user devices
+  await UserDeviceManager().getUserDevice();
+  // init, load and connect to powerbank
+  await pbManager.loadPowerbank();
+  await pbManager.initBluetooth();
+  await pbManager.connect();
 }
 
 class MyApp extends StatelessWidget {
@@ -33,4 +42,9 @@ class MyApp extends StatelessWidget {
       home: const HomeScreen(),
     ));
   }
+}
+
+@pragma('vm:entry-point')
+void notificationTapBackground(NotificationResponse notificationResponse) {
+  // handle action
 }

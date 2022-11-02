@@ -1,17 +1,21 @@
 import 'dart:async';
 import 'dart:convert';
 import 'dart:io';
+import 'dart:math';
 
 import 'package:flutter_reactive_ble/flutter_reactive_ble.dart';
 import 'package:permission_handler/permission_handler.dart';
 import 'package:smart_pb/powerbank/powerbank.dart';
 import 'package:smart_pb/util/file_utils.dart';
+import 'package:smart_pb/util/notification_service.dart';
 
 /// Singleton manager, that manages powerbank instance
 class PowerbankBLManager {
   PowerbankBLManager.privateConstructor() {
     _powerbank = Powerbank();
   }
+
+  final Random _rnd = Random();
 
   static final PowerbankBLManager _instance =
       PowerbankBLManager.privateConstructor();
@@ -20,6 +24,15 @@ class PowerbankBLManager {
 
   File? _file;
   static const _fileName = 'powerbank.json';
+  final List<String> goofyAhNotifications = [
+    'Please feed me, daddy!',
+    'Senpai... Stick your charger inside of me!',
+    'I need that energy drink up my ass right now!',
+    'This robotized powerbank is in heat. Please, insert your cable.',
+    'Fill my nasty port with your filthy USBick!',
+    'Breed me with your energy, master!',
+    'I\'m a whore for your big cable! Stick it in me right now!',
+  ];
 
   // Get the data file
   Future<File> get file async {
@@ -90,10 +103,15 @@ class PowerbankBLManager {
           print('data:[${data[0]},${data[1]},${data[2]},${data[3]}]');
           print("decoded value: ${(data[1] << 8) | data[0]}");
 
-
           powerbank.lastUpdateTime = DateTime.now().millisecondsSinceEpoch;
           powerbank.voltage = (data[1] << 8) | data[0];
           savePowerbank();
+          if (powerbank.charge < 20) {
+            NotificationService().showNotifications(
+                'SmartPB',
+                goofyAhNotifications[
+                    _rnd.nextInt(goofyAhNotifications.length - 1)]);
+          }
         }, onError: (dynamic error) {});
       }
     }, onError: (dynamic error) {
