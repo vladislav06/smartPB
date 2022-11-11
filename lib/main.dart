@@ -11,13 +11,16 @@ late final PowerbankBLManager pbManager;
 void main() {
   pbManager = PowerbankBLManager();
   // init bindings
-  WidgetsFlutterBinding.ensureInitialized();
-  init();
+  //WidgetsFlutterBinding.ensureInitialized();
+  Future.delayed(const Duration(milliseconds: 300)).then((value) {
+    init();
+  });
 
   runApp(const MyApp());
 }
 
 void init() async {
+  print('init+++++++++++++++++++++++++++++++++');
   // init notification
   await NotificationService().init();
 

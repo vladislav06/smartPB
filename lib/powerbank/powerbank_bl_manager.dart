@@ -57,7 +57,7 @@ class PowerbankBLManager {
 
   /// Load [powerbank] from storage
   Future<void> loadPowerbank() async {
-    print('loadPowerbank');
+    print('loadPowerbank++++++++++++++++++++++++++++++++++++++++++++++++++');
     final File fl = await file;
     final content = await fl.readAsString();
 
