@@ -53,7 +53,6 @@ class PowerbankBLManager {
   Future<void> savePowerbank() async {
     final File fl = await file;
     await fl.writeAsString(jsonEncode(_powerbank));
-    print('save powerbank');
   }
 
   /// Load [powerbank] from storage

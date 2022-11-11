@@ -40,10 +40,11 @@ class Powerbank extends ChangeNotifier {
     } else if (vol < 0) {
       vol = 0;
     }
+    print("raw volt: $vol");
     //map voltage to charge
     double charge = 0;
     //convert from some value to actual voltage
-    double voltage = (vol * (3.3 / 4096)) * (1 / 0.701); //47k 20k
+    double voltage = (vol * (3.3 / 4096)) * (1 / 0.47); //47k 47k
 
     //stop points
     if (voltage < _VtoC[0][0]) {
@@ -67,7 +68,7 @@ class Powerbank extends ChangeNotifier {
         }
       }
     }
-
+    // print("raw volt: $vol; calculated vol:$voltage; charge $_charge;");
     _charge = charge;
     notifyListeners();
   }
